@@ -201,9 +201,9 @@ show_shop = False
 show_recipes = False
 message = ""
 message_timer = 0
-font = pygame.font.Stylus("Arial", 18)
-title_font = pygame.font.Stylus("Arial", 24, bold=True)
-small_font = pygame.font.Stylus("Arial", 14)
+font = pygame.font.SysFont("Arial", 18)
+title_font = pygame.font.SysFont("Arial", 24, bold=True)
+small_font = pygame.font.SysFont("Arial", 14)
 
 def draw_message():
     global message, message_timer
