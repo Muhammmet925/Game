@@ -104,8 +104,9 @@ def draw_enemy(frame, e):
         ratio = e['hp'] / info['hp']
         cv2.rectangle(frame, (int(e['x']-20), int(e['y']-info['size']-10)), 
                      (int(e['x']+20), int(e['y']-info['size']-3)), (50, 0, 0), -1)
+        hp_bar_w = int(36 * ratio)
         cv2.rectangle(frame, (int(e['x']-18), int(e['y']-info['size']-8)), 
-                     (int(e['x']-18+36*ratio), int(e['y']-info['size']-5)), RED, -1)
+                     (int(e['x']-18+hp_bar_w), int(e['y']-info['size']-5)), RED, -1)
 
 def draw_bullet(frame, b):
     cv2.circle(frame, (int(b['x']), int(b['y'])), 5, b['color'], -1)
@@ -126,7 +127,8 @@ def draw_ui(frame, hp, score, level, gold, weapon, kills):
     ratio = hp / 100
     cv2.rectangle(frame, (750, 20), (1050, 50), (50, 50, 50), -1)
     hp_color = GREEN if ratio > 0.5 else RED
-    cv2.rectangle(frame, (755, 25), (755 + 290*ratio, 45), hp_color, -1)
+    hp_bar_width = int(290 * ratio)
+    cv2.rectangle(frame, (755, 25), (755 + hp_bar_width, 45), hp_color, -1)
     cv2.putText(frame, f"{int(hp)}/100", (940, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, WHITE, 1)
     cv2.putText(frame, f"Oldurme: {kills}", (1100, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.7, RED, 1)
 
