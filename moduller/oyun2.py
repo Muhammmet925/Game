@@ -3,94 +3,101 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-# ==================== SOUL KNIGHT TARZI OYUN ====================
+# ==================== SOUL KNIGHT - BİREBİR KOPYASINA ÇEVİRME ====================
 
-# --- KARAKTERLER (Soul Knight Karakterleri) ---
+# --- KARAKTERLER (Resmi Soul Knight Karakterleri) ---
 KARAKTERLER = {
     "1": {
         "ad": "Şövalye", 
-        "hiz": 4, 
+        "hiz": 4.5, 
         "goz": Qt.cyan, 
-        "hasar": 1.5,
+        "hasar": 1.0,
         "silah": "kilic",
         "ozel": "Kalkan",
-        "renk": QColor(100, 149, 237),  # Cornflower Blue
-        "aciklama": "Dengeli savaşçı +20% hasar",
+        "renk": QColor(70, 130, 180),  # Steel Blue
+        "aciklama": "Dengeli savaşçı - Kalkan ile hasar azaltma",
         "fiyat": 0,
-        "baslangic_hp": 120
+        "baslangic_hp": 100,
+        "ozellik": {"zirh_bonus": 0.3}
     },
     "2": {
         "ad": "Büyücü", 
         "hiz": 5, 
         "goz": Qt.magenta, 
         "hasar": 2.0,
-        "silah": "deynek",
-        "ozel": "Büyü Hasarı",
-        "renk": QColor(138, 43, 226),  # Blue Violet
-        "aciklama": "Güçlü büyü saldırıları",
+        "silah": "buz_deynek",
+        "ozel": "Büyü Ustası",
+        "renk": QColor(148, 0, 211),  # Dark Violet
+        "aciklama": "Güçlü büyü saldırıları - Mana kullanımı",
         "fiyat": 500,
-        "baslangic_hp": 80
+        "baslangic_hp": 70,
+        "ozellik": {"buyu_bonus": 1.5}
     },
     "3": {
         "ad": "Suikastçı", 
-        "hiz": 10, 
+        "hiz": 9, 
         "goz": Qt.yellow, 
-        "hasar": 1.8,
+        "hasar": 1.5,
         "silah": "yay",
-        "ozel": "Gölge Adımı",
+        "ozel": "Gölge",
         "renk": QColor(50, 205, 50),  # Lime Green
-        "aciklama": "En hızlı + kritik vuruş",
+        "aciklama": "En hızlı - Kritik vuruş şansı",
         "fiyat": 750,
-        "baslangic_hp": 70
+        "baslangic_hp": 65,
+        "ozellik": {"kritik": 0.25}
     },
     "4": {
         "ad": "Mühendis", 
         "hiz": 4, 
         "goz": QColor(255, 165, 0),  # Orange
         "hasar": 1.2,
-        "silah": "tabanca",
-        "ozel": "Tamir",
+        "silah": "makinali",
+        "ozel": "Tamirci",
         "renk": QColor(255, 140, 0),  # Dark Orange
-        "aciklama": "İstasyon kurar + tamir",
+        "aciklama": "İstasyon kurar - Düşmanlarısilah düşürür",
         "fiyat": 1000,
-        "baslangic_hp": 100
+        "baslangic_hp": 90,
+        "ozellik": {"silah_dusurme": 0.3}
     },
     "5": {
         "ad": "Rahip", 
         "hiz": 5, 
         "goz": QColor(255, 255, 240),  # Ivory
-        "hasar": 1.0,
-        "silah": "deynek",
+        "hasar": 0.8,
+        "silah": "buz_deynek",
         "ozel": "İyileştirme",
         "renk": QColor(255, 215, 0),  # Gold
-        "aciklama": "Oto iyileşme + can",
+        "aciklama": "Otomatik iyileşme - Her vuruşta can",
         "fiyat": 1500,
-        "baslangic_hp": 90
+        "baslangic_hp": 85,
+        "ozellik": "iyilestirme": 0.02
     },
     "6": {
         "ad": "Elf", 
         "hiz": 7, 
         "goz": QColor(0, 255, 127),  # Spring Green
-        "hasar": 1.6,
+        "hasar": 1.3,
         "silah": "yay",
         "ok": True,
-        "ozel": "Çift Ok",
+        "ozel": "Avcı",
         "renk": QColor(34, 139, 34),  # Forest Green
-        "aciklama": "İki ok birden atar",
+        "aciklama": "Çift ok atar - Düşmanları yavaşlatır",
         "fiyat": 2000,
-        "baslangic_hp": 85
+        "baslangic_hp": 75,
+        "ozellik": "yavaslatma": True
     },
     "7": {
         "ad": "Paladin", 
-        "hiz": 3, 
+        "hiz": 3.5, 
         "goz": QColor(255, 215, 0),  # Gold
-        "hasar": 2.0,
+        "hasar": 1.8,
         "silah": "kilic",
-        "ozel": "Kutsal Kalkan",
+        "ozel": "Kutsal",
         "renk": QColor(255, 250, 205),  # Lemon Chiffon
-        "aciklama": "Yüksek hasar + zırh",
+        "aciklama": "Yüksek hasar + Zırh - Boss hasarı azaltma",
         "fiyat": 2500,
-        "baslangic_hp": 150
+        "baslangic_hp": 130,
+        "ozellik": "boss_zirh": 0.5
     },
     "8": {
         "ad": "Vampir", 
@@ -98,84 +105,175 @@ KARAKTERLER = {
         "goz": Qt.red, 
         "hasar": 1.4,
         "silah": "kilic",
-        "ozel": "Can Emme",
+        "ozel": "Kan Emici",
         "renk": QColor(139, 0, 0),  # Dark Red
-        "aciklama": "Düşmandan can çalar",
+        "aciklama": "Vuruşta can kazanır - Ölümsüzlük şansı",
         "fiyat": 3000,
-        "baslangic_hp": 95
+        "baslangic_hp": 80,
+        "ozellik": "can_emme": 0.15
+    },
+    "9": {
+        "ad": "Ninja", 
+        "hiz": 8, 
+        "goz": QColor(200, 0, 200),  # Purple
+        "hasar": 1.6,
+        "silah": "ninjya_bıcağı",
+        "ozel": "Shuriken",
+        "renk": QColor(75, 0, 130),  # Indigo
+        "aciklama": "Hızlı - Bıçak fırlatma",
+        "fiyat": 3500,
+        "baslangic_hp": 72,
+        "ozellik": "suresiz_silah": True
+    },
+    "10": {
+        "ad": "Baba Yaga", 
+        "hiz": 4, 
+        "goz": QColor(255, 100, 100),  # Light Red
+        "hasar": 2.2,
+        "silah": "ases_deynek",
+        "ozel": "Ateş Topu",
+        "renk": QColor(128, 0, 0),  # Maroon
+        "aciklama": "En güçlü - Patlama hasarı",
+        "fiyat": 4000,
+        "baslangic_hp": 75,
+        "ozellik": "patlama": True
     },
 }
 
-# --- SİLAHLAR ---
+# --- SİLAHLAR (Soul Knight Silahları) ---
 SILAHLAR = {
-    "kilic": {"renk": Qt.cyan, "boyut": 8, "hiz": 20, "aralik": 0.4, "hasar": 2, "ad": "Kılıç", "fiyat": 0, "tur": "yakın"},
-    "yay": {"renk": QColor(139, 90, 43), "boyut": 4, "hiz": 18, "aralik": 0.5, "hasar": 1.5, "ad": " Yay", "fiyat": 500, "tur": "uzak"},
-    "deynek": {"renk": Qt.magenta, "boyut": 5, "hiz": 15, "aralik": 0.6, "hasar": 2.5, "ad": "Sihirli Değnek", "fiyat": 750, "tur": "büyü"},
-    "tabanca": {"renk": Qt.yellow, "boyut": 5, "hiz": 25, "aralik": 0.2, "hasar": 1, "ad": "Tabanca", "fiyat": 0, "tur": "ates"},
-    "pompali": {"renk": QColor(205, 92, 92), "boyut": 12, "hiz": 10, "aralik": 0.8, "hasar": 3, "ad": "Pompalı", "fiyat": 500, "tur": "ates"},
-    "lazer": {"renk": Qt.red, "boyut": 3, "hiz": 30, "aralik": 0.15, "hasar": 0.8, "ad": "Lazer", "fiyat": 1000, "tur": "lazer"},
-    "asit": {"renk": QColor(0, 255, 0), "boyut": 6, "hiz": 12, "aralik": 0.3, "hasar": 1.5, "ad": "Asit Tabancası", "fiyat": 1500, "tur": "kimyasal"},
-    "alev": {"renk": QColor(255, 69, 0), "boyut": 10, "hiz": 8, "aralik": 0.05, "hasar": 0.5, "ad": "Alev Makinesi", "fiyat": 2000, "tur": "alev"},
-    "buz": {"renk": QColor(135, 206, 250), "boyut": 5, "hiz": 14, "aralik": 0.4, "hasar": 1.2, "ad": "Buz Asası", "fiyat": 1800, "tur": "buz"},
-    "yildirim": {"renk": QColor(255, 255, 0), "boyut": 4, "hiz": 22, "aralik": 0.25, "hasar": 1.8, "ad": "Yıldırım", "fiyat": 2500, "tur": "elektrik"},
+    "kilic": {
+        "renk": QColor(192, 192, 192),  # Silver
+        "boyut": 10, "hiz": 0, "aralik": 0.5, "hasar": 3, 
+        "ad": "Kılıç", "fiyat": 0, "tur": "yakın",
+        "aciklama": "Yakın dövüş silahı"
+    },
+    "yay": {
+        "renk": QColor(139, 90, 43),  # Brown
+        "boyut": 4, "hiz": 18, "aralik": 0.4, "hasar": 1.5, 
+        "ad": " Yay", "fiyat": 500, "tur": "uzak",
+        "aciklama": "Hızlı ok atışı"
+    },
+    "makinali": {
+        "renk": QColor(100, 100, 100),  # Gray
+        "boyut": 3, "hiz": 25, "aralik": 0.08, "hasar": 0.4, 
+        "ad": "Makinalı", "fiyat": 750, "tur": "ates",
+        "aciklama": "Sürekli ateş"
+    },
+    "pompa": {
+        "renk": QColor(205, 92, 92),  # Indian Red
+        "boyut": 14, "hiz": 10, "aralik": 0.7, "hasar": 4, 
+        "ad": "Pompalı Tüfek", "fiyat": 1000, "tur": "ates",
+        "aciklama": "Geniş alan hasarı"
+    },
+    "buz_deynek": {
+        "renk": QColor(135, 206, 250),  # Light Blue
+        "boyut": 5, "hiz": 15, "aralik": 0.5, "hasar": 2, 
+        "ad": "Buz Asası", "fiyat": 1250, "tur": "buz",
+        "aciklama": "Düşmanları yavaşlatır"
+    },
+    "ates_deynek": {
+        "renk": QColor(255, 69, 0),  # Orange Red
+        "boyut": 6, "hiz": 12, "aralik": 0.6, "hasar": 2.5, 
+        "ad": "Ateş Asası", "fiyat": 1500, "tur": "ates",
+        "aciklama": "Yanma hasarı"
+    },
+    "elektrik_deynek": {
+        "renk": QColor(255, 255, 0),  # Yellow
+        "boyut": 4, "hiz": 20, "aralik": 0.3, "hasar": 1.5, 
+        "ad": "Yıldırım Asası", "fiyat": 1750, "tur": "elektrik",
+        "aciklama": "Zincirleme hasar"
+    },
+    "lazer_tufek": {
+        "renk": Qt.red,
+        "boyut": 3, "hiz": 30, "aralik": 0.15, "hasar": 0.8, 
+        "ad": "Lazer Tüfeği", "fiyat": 2000, "tur": "lazer",
+        "aciklama": "İsabet oranı yüksek"
+    },
+    "ninjya_bıcağı": {
+        "renk": QColor(128, 128, 128),  # Gray
+        "boyut": 4, "hiz": 22, "aralik": 0.25, "hasar": 1.2, 
+        "ad": "Ninja Bıçağı", "fiyat": 1500, "tur": "firlatilan",
+        "aciklama": "Hızlı fırlatma"
+    },
+    "tesbih": {
+        "renk": QColor(255, 215, 0),  # Gold
+        "boyut": 5, "hiz": 14, "aralik": 0.45, "hasar": 1.8, 
+        "ad": "Kutsal Tesbih", "fiyat": 2500, "tur": "kutsal",
+        "aciklama": "Şifa verir"
+    },
+    "kask": {
+        "renk": QColor(0, 255, 127),  # Spring Green
+        "boyut": 6, "hiz": 16, "aralik": 0.35, "hasar": 1.3, 
+        "ad": "Nebula", "fiyat": 3000, "tur": "nebula",
+        "aciklama": "Yıldız fırlatır"
+    },
+    "kılıç_2": {
+        "renk": QColor(255, 0, 255),  # Magenta
+        "boyut": 12, "hiz": 0, "aralik": 0.4, "hasar": 4, 
+        "ad": "Kutsal Kılıç", "fiyat": 3500, "tur": "kutsal_kilic",
+        "aciklama": "Döner kılıç"
+    },
 }
 
-# --- DÜŞMAN TÜRLERİ ---
+# --- DÜŞMAN TÜRLERİ (Soul Knight Düşmanları) ---
 DUSMAN_TURLERI = {
-    "slime": {"hp": 2, "hiz": 1.5, "renk": QColor(0, 255, 0), "boyut": 18, "puan": 10, "ad": "Slime", "efekt": "yavas"},
-    "yarasa": {"hp": 1, "hiz": 4, "renk": QColor(100, 100, 100), "boyut": 14, "puan": 15, "ad": "Yarasa", "efekt": None},
-    "iskelet": {"hp": 3, "hiz": 2, "renk": QColor(240, 240, 240), "boyut": 20, "puan": 20, "ad": "İskelet", "efekt": None},
-    "orc": {"hp": 5, "hiz": 2.5, "renk": QColor(139, 69, 19), "boyut": 28, "puan": 35, "ad": "Ork", "efekt": "carpma"},
-    "hayalet": {"hp": 1.5, "hiz": 3, "renk": QColor(200, 200, 255), "boyut": 16, "puan": 25, "ad": "Hayalet", "efekt": "gecirgen"},
-    "bug": {"hp": 2, "hiz": 2, "renk": QColor(255, 0, 255), "boyut": 15, "puan": 20, "ad": " Böcek", "efekt": "zeka"},
-    "golem": {"hp": 10, "hiz": 1, "renk": QColor(105, 105, 105), "boyut": 40, "puan": 80, "ad": "Golem", "efekt": "darbe"},
-    "boss1": {"hp": 30, "hiz": 1.5, "renk": QColor(139, 0, 0), "boyut": 50, "puan": 500, "ad": "Karanlık Lord", "efekt": "boss"},
-    "boss2": {"hp": 50, "hiz": 2, "renk": QColor(75, 0, 130), "boyut": 60, "puan": 1000, "ad": "Ejderha Kral", "efekt": "boss"},
+    "toplanan": {"hp": 1, "hiz": 2, "renk": QColor(0, 255, 0), "boyut": 18, "puan": 5, "ad": "Yeşil Top", "efekt": "yavas", "desc": "Yavaşlar"},
+    "mavi_top": {"hp": 1, "hiz": 3, "renk": QColor(0, 100, 255), "boyut": 16, "puan": 8, "ad": "Mavi Top", "efekt": None, "desc": "Hızlı"},
+    "kırmızı_top": {"hp": 2, "hiz": 2.5, "renk": QColor(255, 50, 50), "boyut": 20, "puan": 12, "ad": "Kırmızı Top", "efekt": "carpma", "desc": "Patlar"},
+    "mor_top": {"hp": 1.5, "hiz": 2.8, "renk": QColor(180, 0, 255), "boyut": 17, "puan": 10, "ad": "Mor Top", "efekt": "buyulu", "desc": "Büyülü"},
+    "iskelet": {"hp": 3, "hiz": 2, "renk": QColor(240, 240, 240), "boyut": 22, "puan": 20, "ad": "İskelet", "efekt": None, "desc": "Savaşçı"},
+    "iskelet_okcu": {"hp": 2, "hiz": 1.5, "renk": QColor(200, 200, 200), "boyut": 18, "puan": 25, "ad": "İskelet Okçu", "efekt": "ok", "desc": "Uzaktan"},
+    "golem": {"hp": 12, "hiz": 1, "renk": QColor(105, 105, 105), "boyut": 45, "puan": 80, "ad": "Golem", "efekt": "darbe", "desc": "Zırhlı"},
+    "orc": {"hp": 5, "hiz": 2.5, "renk": QColor(139, 69, 19), "boyut": 30, "puan": 35, "ad": "Ork", "efekt": "carpma", "desc": "Güçlü"},
+    "hayalet": {"hp": 1, "hiz": 3.5, "renk": QColor(200, 200, 255), "boyut": 15, "puan": 30, "ad": "Hayalet", "efekt": "gecirgen", "desc": "Geçirgen"},
+    "bos_kral": {"hp": 40, "hiz": 1.2, "renk": QColor(139, 0, 0), "boyut": 55, "puan": 500, "ad": "Ölümsüz Wollow", "efekt": "boss", "desc": "BOSS"},
+    "canavar": {"hp": 60, "hiz": 1.5, "renk": QColor(75, 0, 130), "boyut": 65, "puan": 1000, "ad": "Kara Canavar", "efekt": "boss", "desc": "BOSS"},
 }
 
 # --- ODALAR ---
 ODALAR = {
-    "normal": {"ad": "Savaş Odası", "dusman_sayisi": 5, "zorluk": 1, "renk": QColor(80, 80, 80)},
-    "elite": {"ad": "Elit Oda", "dusman_sayisi": 8, "zorluk": 2, "renk": QColor(139, 69, 19)},
-    "boss": {"ad": "Boss Odası", "dusman_sayisi": 1, "zorluk": 3, "renk": QColor(139, 0, 0)},
-    "magaza": {"ad": "Dükkan", "dusman_sayisi": 0, "zorluk": 0, "renk": QColor(0, 100, 0)},
-    "dinlenme": {"ad": "İstirahat", "dusman_sayisi": 0, "zorluk": 0, "renk": QColor(0, 0, 139)},
-    "hazine": {"ad": "Hazine Odası", "dusman_sayisi": 3, "zorluk": 1.5, "renk": QColor(218, 165, 32)},
+    "savas": {"ad": "Savaş Odası", "dusman_sayisi": 5, "zorluk": 1, "renk": QColor(80, 80, 80), "icon": "⚔️"},
+    "zorlu": {"ad": "Zorlu Oda", "dusman_sayisi": 8, "zorluk": 2, "renk": QColor(139, 69, 19), "icon": "💀"},
+    "boss": {"ad": "Boss Odası", "dusman_sayisi": 1, "zorluk": 3, "renk": QColor(139, 0, 0), "icon": "👹"},
+    "dukkan": {"ad": "Dükkan", "dusman_sayisi": 0, "zorluk": 0, "renk": QColor(0, 100, 0), "icon": "🏪"},
+    "sandik": {"ad": "Hazine", "dusman_sayisi": 3, "zorluk": 1.5, "renk": QColor(218, 165, 32), "icon": "📦"},
+    "istirahat": {"ad": "İstirahat", "dusman_sayisi": 0, "zorluk": 0, "renk": QColor(0, 0, 139), "icon": "⛺"},
 }
 
 # --- GÜÇLENDİRMELER ---
 POWER_UPLAR = {
-    "can": {"renk": Qt.green, "sembol": "+", "aciklama": "Can +50", "fiyat": 100, "deger": 50},
-    "zirh": {"renk": Qt.blue, "sembol": "Z", "aciklama": "Zırh +30", "fiyat": 150, "deger": 30},
-    "hasar": {"renk": Qt.red, "sembol": "H", "aciklama": "Hasar +25%", "fiyat": 200, "deger": 0.25},
-    "hiz": {"renk": Qt.yellow, "sembol": "⚡", "aciklama": "Hız +20%", "fiyat": 150, "deger": 0.2},
-    "savurma": {"renk": QColor(255, 0, 255), "sembol": "S", "aciklama": "Savurma +30%", "fiyat": 250, "deger": 0.3},
-    "kritik": {"renk": QColor(255, 165, 0), "sembol": "K", "aciklama": "Kritik +15%", "fiyat": 300, "deger": 0.15},
+    "can": {"renk": Qt.green, "sembol": "+", "aciklama": "Maks. Can +30%", "fiyat": 200, "deger": 30},
+    "zirh": {"renk": Qt.blue, "sembol": "Z", "aciklama": "Zırh +20", "fiyat": 250, "deger": 20},
+    "hasar": {"renk": Qt.red, "sembol": "⚔️", "aciklama": "Hasar +20%", "fiyat": 300, "deger": 0.2},
+    "hiz": {"renk": Qt.yellow, "sembol": "⚡", "aciklama": "Ateş Hızı +15%", "fiyat": 250, "deger": 0.15},
+    "kritik": {"renk": QColor(255, 165, 0), "sembol": "💥", "aciklama": "Kritik +10%", "fiyat": 400, "deger": 0.1},
+    "ok": {"renk": QColor(139, 90, 43), "sembol": "🏹", "aciklama": "Ok Sayısı +1", "fiyat": 350, "deger": 1},
 }
 
-# --- PARÇACIK SİSTEMİ ---
+# --- EFEKT SINIFLARI ---
 class Particle:
     def __init__(self, pos, color, size=None):
         self.pos = QPointF(pos)
         angle = random.uniform(0, 2 * math.pi)
-        speed = random.uniform(2, 8)
+        speed = random.uniform(2, 10)
         self.vel = QPointF(math.cos(angle) * speed, math.sin(angle) * speed)
         self.life = 255
         self.color = color
-        self.size = size if size else random.randint(3, 8)
+        self.size = size if size else random.randint(3, 10)
 
     def update(self):
         self.pos += self.vel
-        self.vel *= 0.95
-        self.life -= 10
+        self.vel *= 0.92
+        self.life -= 12
         return self.life > 0
 
 class SparkEffect:
     def __init__(self, pos, color):
         self.particles = []
-        for _ in range(10):
-            p = Particle(pos, color, random.randint(2, 5))
-            p.vel *= 2
+        for _ in range(15):
+            p = Particle(pos, color, random.randint(2, 6))
+            p.vel *= 2.5
             self.particles.append(p)
     
     def update(self):
@@ -199,15 +297,33 @@ class GlowEffect:
         self.life = 255
     
     def update(self):
-        self.life -= 8
-        self.size += 0.3
+        self.life -= 10
+        self.size += 0.5
         return self.life > 0
     
     def draw(self, p):
         c = QColor(self.color)
-        c.setAlpha(self.life // 4)
-        p.setPen(QPen(c, 2))
+        c.setAlpha(self.life // 3)
+        p.setPen(QPen(c, 3))
         p.setBrush(Qt.NoBrush)
+        p.drawEllipse(self.pos, self.size, self.size)
+
+class Trail:
+    def __init__(self, pos, color):
+        self.pos = QPointF(pos)
+        self.color = color
+        self.life = 180
+        self.size = 12
+    
+    def update(self):
+        self.life -= 6
+        self.size *= 0.97
+        return self.life > 0
+    
+    def draw(self, p):
+        c = QColor(self.color)
+        c.setAlpha(self.life // 3)
+        p.setBrush(c)
         p.drawEllipse(self.pos, self.size, self.size)
 
 # --- KAYIT SİSTEMİ ---
@@ -230,23 +346,21 @@ class KayitSistemi:
             return None
 
 # --- ANA OYUN SINIFI ---
-class SoulKnight(QMainWindow):
+class SoulKnightGame(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setFixedSize(1200, 800)
-        self.setWindowTitle("SOUL KNIGHT - KADERİNİ KENDİN ÇİZ")
+        self.setWindowTitle("SOUL KNIGHT - Resmi Tarzı")
         self.setMouseTracking(True)
         
         self.shake_amount = 0
         self.last_shot_time = 0
         self.init_game()
         
-        # Oyun zamanlayıcısı
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_game)
         self.timer.start(16)
         
-        # Kayıtlı verileri yükle
         self.kayit = KayitSistemi.yukle() or {
             "para": 0, 
             "karakterler": ["1"], 
@@ -258,74 +372,67 @@ class SoulKnight(QMainWindow):
         self.acilan_karakterler = self.kayit.get("karakterler", ["1"])
         self.acilan_silahlar = self.kayit.get("silahlar", ["kilic"])
         
-        # Menü durumu
         self.menu_sayfa = "karakter"
 
     def init_game(self):
         self.state = "MENU"
-        self.p_pos = QPointF(600, 400)
-        self.mouse_pos = QPoint(600, 400)
+        self.p_pos = QPointF(600, 450)
+        self.mouse_pos = QPoint(600, 450)
         
-        # Oyun nesneleri
         self.enemies = []
         self.bullets = []
         self.particles = []
         self.sparks = []
         self.glows = []
         self.powerups = []
+        self.trails = []
+        self.sandiklar = []
         
-        # İstatistikler
         self.para = 0
         self.skor = 0
         self.seviye = 1
         self.oda_numarasi = 1
         self.kill_count = 0
         
-        # Karakter özellikleri
         self.p_can = 100
         self.p_zirh = 0
         self.max_can = 100
         self.sel_char = KARAKTERLER["1"]
         self.silah = "kilic"
         
-        # Güçlendirmeler
         self.hasar_boost = 1.0
         self.hiz_boost = 1.0
-        self.savurma_boost = 1.0
         self.kritik_sans = 0.0
+        self.ok_sayisi = 1
         
-        # Oda sistemi
-        self.oda_turu = "normal"
+        self.oda_turu = "savas"
         self.oda_temizlendi = False
-        self.oda_dusman_sayisi = 0
+        self.oda_dusman_sayisi = 5
         self.oda_dusman_olen = 0
-        self.su_anki_oda = None
         
-        # Diğer
         self.menu_secim = 0
         self.oyuncu_yonu = 0
-        self.ates_edildi = False
         self.silah_animasyon = 0
+        
         self.odul_kazanildi = False
+        self.para_miktari = 0
 
     def update_game(self):
         if self.state != "PLAY": 
             self.update()
             return
         
-        # Ekran sallantısı
         if self.shake_amount > 0: 
             self.shake_amount -= 1
         
-        # Silah animasyonu
         if self.silah_animasyon > 0:
             self.silah_animasyon -= 1
         
-        # Rahip iyileşmesi
-        if self.sel_char["ad"] == "Rahip" and self.p_can < self.max_can:
-            if random.random() < 0.02:
-                self.p_can = min(self.max_can, self.p_can + 0.5)
-                self.glows.append(GlowEffect(self.p_pos, QColor(0, 255, 0), 15))
+        # Karakter özellikleri
+        if self.sel_char.get("ozellik", {}).get("iyilestirme") and self.p_can < self.max_can:
+            if random.random() < self.sel_char["ozellik"]["iyilestirme"]:
+                self.p_can = min(self.max_can, self.p_can + 0.3)
+                self.glows.append(GlowEffect(self.p_pos, QColor(0, 255, 0), 10))
         
         # Karakter hareketi
         target = QPointF(self.mouse_pos)
@@ -336,22 +443,34 @@ class SoulKnight(QMainWindow):
                            (target.y()-self.p_pos.y())/d * hiz)
             self.p_pos += move
             
-            # Karakter yönü
             self.oyuncu_yonu = math.atan2(target.y()-self.p_pos.y(), target.x()-self.p_pos.x())
-
-        # Oda temiz mi kontrolü
-        if not self.oda_temizlendi and len(self.enemies) == 0 and self.oda_dusman_sayisi > 0:
+            
+            # İz efekti
+            if random.random() > 0.5:
+                self.trails.append(Trail(self.p_pos, self.silah_bilgi()["renk"]))
+        
+        # İz güncelleme
+        self.trails = [t for t in self.trails if t.update()]
+        
+        # Oda temiz mi?
+        if not self.oda_temizlendi and len(self.enemies) == 0 and self.oda_dusman_sayisi > 0 and not self.odul_kazanildi:
             self.oda_temizlendi = True
             self.odul_kazanildi = True
-            self.para += 50 + self.seviye * 10  # Oda ödülü
-            self.show_message("ODA TEMİZLENDİ! +{} Para".format(50 + self.seviye * 10), Qt.green)
+            self.para_miktari = 30 + self.seviye * 15 + random.randint(10, 50)
+            self.para += self.para_miktari
             
-            # Sonraki odayı hazırla
-            QTimer.singleShot(2000, self.sonraki_oda)
+            # Sandık spawn
+            if random.random() < 0.3:
+                self.spawn_sandik()
+            
+            self.show_message("ODA TEMİZLENDİ! +{} Para".format(self.para_miktari), Qt.green)
+            
+            if self.oda_turu != "boss":
+                QTimer.singleShot(2500, self.oda_secimi_goster)
         
-        # Düşman spawn (oda dolu değilse ve oda temizlenmemişse)
+        # Düşman spawn
         if not self.oda_temizlendi and len(self.enemies) < self.oda_dusman_sayisi:
-            if random.random() < 0.03:
+            if random.random() < 0.04:
                 self.spawn_dusman()
         
         # Düşman hareketi
@@ -360,7 +479,7 @@ class SoulKnight(QMainWindow):
             hiz = tur_bilgi["hiz"] * (1 + self.seviye * 0.1)
             
             if e.get("yavas"):
-                hiz *= 0.3
+                hiz *= 0.25
             
             dist = math.hypot(self.p_pos.x()-e["p"].x(), self.p_pos.y()-e["p"].y())
             if dist > 0:
@@ -369,73 +488,64 @@ class SoulKnight(QMainWindow):
                     (self.p_pos.y()-e["p"].y())/dist * hiz
                 )
             
-            # Çarpışma hasarı
             if dist < 30:
-                hasar = 0.3 * (1 if e["tur"] != "boss1" and e["tur"] != "boss2" else 2)
-                self.al_hasar(hasar)
+                boss_zarar = 1 if self.oda_turu != "boss" else 3
+                if self.sel_char.get("ozellik", {}).get("boss_zirh"):
+                    boss_zarar *= (1 - self.sel_char["ozellik"]["boss_zirh"])
+                self.al_hasar(boss_zarar * 0.5)
                 self.shake_amount = 5
         
         # Mermi kontrolü
         for b in self.bullets[:]:
             b['p'] += b['v']
-            
-            # Mermi ömrü
             b['omr'] -= 1
+            
             if b['omr'] <= 0:
                 self.bullets.remove(b)
                 continue
             
-            # Düşman çarpışması
             for e in self.enemies[:]:
                 tur_bilgi = DUSMAN_TURLERI[e["tur"]]
                 if math.hypot(b['p'].x()-e['p'].x(), b['p'].y()-e['p'].y()) < tur_bilgi["boyut"]:
                     silah_bilgi = self.silah_bilgi()
                     
-                    # Kritik vuruş hesapla
-                    kritik = random.random() < self.kritik_sans
-                    hasar = silah_bilgi["hasar"] * self.hasar_boost * self.sel_char["hasar"]
+                    kritik = random.random() < (self.kritik_sans + self.sel_char.get("ozellik", {}).get("kritik", 0))
+                    hasar = silah_bilgi["hasar"] * self.hasar_boost
+                    
                     if kritik:
                         hasar *= 2
                         self.sparks.append(SparkEffect(e['p'], Qt.yellow))
                     
                     e['hp'] -= hasar
                     
-                    # Efektler
                     self.sparks.append(SparkEffect(e['p'], tur_bilgi["renk"]))
                     
-                    # Özel silah efektleri
-                    if self.silah == "buz":
+                    if self.silah == "buz_deynek":
                         e["yavas"] = True
-                    elif self.silah == "alev":
-                        e["yaniyor"] = 50
-                    elif self.silah == "asit":
-                        e["asitli"] = 30
+                    elif self.silah == "ates_deynek":
+                        e["yaniyor"] = 40
                     
                     if b in self.bullets:
                         self.bullets.remove(b)
                     
-                    # Düşman ölümü
+                    # Can emme
+                    if self.sel_char.get("ozellik", {}).get("can_emme"):
+                        self.p_can = min(self.max_can, self.p_can + hasar * self.sel_char["ozellik"]["can_emme"])
+                    
                     if e['hp'] <= 0:
                         self.dusman_oldu(e)
             
-            # Ekran dışı
             if not self.rect().contains(b['p'].toPoint()): 
                 if b in self.bullets: 
                     self.bullets.remove(b)
 
         # Yanma efekti
-        for e in self.enemies:
+        for e in self.enemies[:]:
             if e.get("yaniyor", 0) > 0:
-                e["hp"] -= 0.03
+                e["hp"] -= 0.04
                 e["yaniyor"] -= 1
-                if random.random() > 0.7:
+                if random.random() > 0.6:
                     self.particles.append(Particle(e["p"], QColor(255, 100, 0), 3))
-                if e["hp"] <= 0:
-                    self.dusman_oldu(e)
-            
-            if e.get("asitli", 0) > 0:
-                e["hp"] -= 0.02
-                e["asitli"] -= 1
                 if e["hp"] <= 0:
                     self.dusman_oldu(e)
 
@@ -450,45 +560,52 @@ class SoulKnight(QMainWindow):
             if dist < 25:
                 self.powerup_al(pu)
                 self.powerups.remove(pu)
+        
+        # Sandık toplama
+        for s in self.sandiklar[:]:
+            dist = math.hypot(self.p_pos.x()-s["p"].x(), self.p_pos.y()-s["p"].y())
+            if dist < 30:
+                sandik_para = random.randint(20, 100) * self.seviye
+                self.para += sandik_para
+                self.show_message("SANDIK! +{} Para".format(sandik_para), QColor(255, 215, 0))
+                for _ in range(10):
+                    self.particles.append(Particle(s["p"], QColor(255, 215, 0), 5))
+                self.sandiklar.remove(s)
 
-        # Can yenileme (düşük ihtimal)
-        if self.p_can < self.max_can and random.random() < 0.003:
-            self.p_can = min(self.max_can, self.p_can + 1)
+        # Can yenileme
+        if self.p_can < self.max_can and random.random() < 0.002:
+            self.p_can = min(self.max_can, self.p_can + 0.5)
 
-        # Oyun bitişi kontrolü
         if self.p_can <= 0: 
             self.oyun_bitti()
         
         self.update()
 
     def spawn_dusman(self):
-        """Düşman spawn et"""
-        # Oda kenarlarından spawn olsun
         side = random.choice(['T', 'B', 'L', 'R'])
         if side == 'T':
             px = random.randint(100, 1100)
-            py = random.randint(50, 150)
+            py = random.randint(50, 120)
         elif side == 'B':
             px = random.randint(100, 1100)
-            py = random.randint(650, 750)
+            py = random.randint(680, 750)
         elif side == 'L':
-            px = random.randint(50, 150)
+            px = random.randint(50, 120)
             py = random.randint(150, 650)
         else:
-            px = random.randint(1050, 1150)
+            px = random.randint(1080, 1150)
             py = random.randint(150, 650)
         
-        # Düşman türü seçimi
         if self.oda_turu == "boss":
-            tur = "boss1" if self.seviye < 5 else "boss2"
-        elif self.oda_turu == "elite":
-            tur = random.choice(["orc", "iskelet", "golem"])
-        elif self.oda_turu == "hazina":
-            tur = random.choice(["yarasa", "bug"])
+            tur = random.choice(["bos_kral", "canavar"])
+        elif self.oda_turu == "zorlu":
+            tur = random.choice(["iskelet", "orc", "golem"])
+        elif self.oda_turu == "sandik":
+            tur = random.choice(["toplanan", "mavi_top"])
         else:
-            tur = random.choices(["slime", "yarasa", "iskelet"], weights=[50, 30, 20])[0]
+            tur = random.choices(["toplanan", "mavi_top", "kırmızı_top", "mor_top"], weights=[35, 30, 20, 15])[0]
         
-        hp_carpani = 1 + (self.seviye - 1) * 0.3
+        hp_carpani = 1 + (self.seviye - 1) * 0.25
         
         self.enemies.append({
             "p": QPointF(px, py), 
@@ -496,118 +613,90 @@ class SoulKnight(QMainWindow):
             "max_hp": DUSMAN_TURLERI[tur]["hp"] * hp_carpani,
             "tur": tur,
             "yavas": False,
-            "yaniyor": 0,
-            "asitli": 0
+            "yaniyor": 0
+        })
+
+    def spawn_sandik(self):
+        self.sandiklar.append({
+            "p": QPointF(random.randint(200, 1000), random.randint(200, 600))
         })
 
     def dusman_oldu(self, e):
-        """Düşman öldüğünde"""
         tur_bilgi = DUSMAN_TURLERI[e["tur"]]
         
-        # Ölüm efektleri
-        for _ in range(15):
-            self.particles.append(Particle(e["p"], tur_bilgi["renk"], random.randint(4, 8)))
+        for _ in range(20):
+            self.particles.append(Particle(e["p"], tur_bilgi["renk"], random.randint(4, 10)))
         
-        # Para ve skor
-        self.para += tur_bilgi["puan"] // 2
+        para_kazanci = tur_bilgi["puan"] + random.randint(5, 15)
+        self.para += para_kazanci
         self.skor += tur_bilgi["puan"]
         self.kill_count += 1
         
-        # Vampir karakteri için can emme
-        if self.sel_char["ad"] == "Vampir":
-            self.p_can = min(self.max_can, self.p_can + 5)
-            self.glows.append(GlowEffect(self.p_pos, Qt.red, 20))
+        # Mühendis - silah düşürme şansı
+        if self.sel_char.get("ozellik", {}).get("silah_dusurme") and random.random() < 0.15:
+            self.spawn_powerup(e["p"])
         
-        # Boss ölümü
-        if e["tur"] in ["boss1", "boss2"]:
-            self.para += 200 * self.seviye
+        if e["tur"] in ["bos_kral", "canavar"]:
+            self.para += 300 * self.seviye
             self.skor += 1000 * self.seviye
-            self.show_message("BOSS ÖLDÜ! +{} Para".format(200 * self.seviye), Qt.yellow)
+            self.show_message("BOSS ÖLDÜ! +{} Para".format(300 * self.seviye), Qt.yellow)
             self.glows.append(GlowEffect(QPointF(600, 400), Qt.yellow, 150))
             self.seviye += 1
             self.oda_temizlendi = True
-            QTimer.singleShot(3000, self.sonraki_oda)
+            QTimer.singleShot(3000, self.oda_secimi_goster)
         
         if e in self.enemies:
             self.enemies.remove(e)
         
         self.oda_dusman_olen += 1
 
-    def sonraki_oda(self):
-        """Sonraki odayı hazırla"""
-        self.oda_numarasi += 1
-        
-        # Oda türü belirleme
-        if self.oda_numarasi % 10 == 0:
-            self.oda_turu = "boss"
-        elif self.oda_numarasi % 5 == 0:
-            self.oda_turu = random.choice(["elite", "magaza", "dinlenme"])
-        elif self.oda_numarasi % 3 == 0:
-            self.oda_turu = random.choice(["hazine", "normal"])
-        else:
-            self.oda_turu = "normal"
-        
-        oda_bilgi = ODALAR[self.oda_turu]
-        
-        if self.oda_turu in ["magaza", "dinlenme"]:
-            self.oda_dusman_sayisi = 0
-            self.oda_temizlendi = True
-            
-            if self.oda_turu == "dinlenme":
-                self.p_can = min(self.max_can, self.p_can + 50)
-                self.show_message("İSTİRAAT! Can +50", Qt.green)
-            else:
-                self.state = "SHOP"
-                self.show_message("DÜKKAN - Silah/Güçlendirme Al", Qt.cyan)
-        else:
-            self.oda_dusman_sayisi = oda_bilgi["dusman_sayisi"]
-            self.oda_temizlendi = False
-        
-        # Oyuncu pozisyonunu sıfırla
-        self.p_pos = QPointF(600, 400)
-        
-        # Temizlik
-        self.bullets = []
-        self.powerups = []
-        
-        self.show_message("ODA {} - {}".format(self.oda_numarasi, oda_bilgi["ad"]), Qt.white)
-
-    def al_hasar(self, miktar):
-        if self.p_zirh > 0:
-            self.p_zirh -= miktar
-            if self.p_zirh < 0:
-                miktar = -self.p_zirh
-                self.p_zirh = 0
-            else:
-                miktar = 0
-        
-        if miktar > 0:
-            self.p_can -= miktar
-        
-        self.shake_amount = 8
-        if random.random() > 0.5:
-            self.particles.append(Particle(self.p_pos, Qt.red))
-            self.sparks.append(SparkEffect(self.p_pos, Qt.red))
+    def spawn_powerup(self, pos):
+        tur = random.choice(list(POWER_UPLAR.keys()))
+        self.powerups.append({
+            "p": QPointF(pos),
+            "tur": tur,
+            "bilgi": POWER_UPLAR[tur]
+        })
 
     def powerup_al(self, powerup):
         tur = powerup["tur"]
         bilgi = POWER_UPLAR[tur]
         
         if tur == "can":
-            self.p_can = min(self.max_can + 50, self.p_can + bilgi["deger"])
+            self.max_can += int(self.max_can * bilgi["deger"] / 100)
+            self.p_can = min(self.max_can, self.p_can + self.max_can * 0.5)
         elif tur == "zirh":
             self.p_zirh = min(100, self.p_zirh + bilgi["deger"])
         elif tur == "hasar":
             self.hasar_boost += bilgi["deger"]
         elif tur == "hiz":
             self.hiz_boost += bilgi["deger"]
-        elif tur == "savurma":
-            self.savurma_boost += bilgi["deger"]
         elif tur == "kritik":
             self.kritik_sans += bilgi["deger"]
+        elif tur == "ok":
+            self.ok_sayisi += bilgi["deger"]
         
         self.show_message(bilgi["aciklama"], bilgi["renk"])
         self.glows.append(GlowEffect(self.p_pos, bilgi["renk"], 25))
+
+    def oda_secimi_goster(self):
+        self.state = "ODA_SECIM"
+
+    def al_hasar(self, miktar):
+        if self.p_zirh > 0:
+            self.p_zirh -= miktar * 0.7
+            miktar *= 0.3
+            if self.p_zirh < 0:
+                miktar -= self.p_zirh
+                self.p_zirh = 0
+        
+        if miktar > 0:
+            self.p_can -= miktar
+        
+        self.shake_amount = 8
+        if random.random() > 0.4:
+            self.particles.append(Particle(self.p_pos, Qt.red))
+            self.sparks.append(SparkEffect(self.p_pos, Qt.red))
 
     def show_message(self, text, renk):
         self.aktif_mesaj = {"metin": text, "renk": renk, "sure": 180}
@@ -627,10 +716,10 @@ class SoulKnight(QMainWindow):
         if self.state == "MENU":
             if self.menu_sayfa == "karakter":
                 self.karakter_sec()
-            elif self.menu_sayfa == "magaza":
-                self.magaza_sec()
-            elif self.menu_sayfa == "silah":
-                self.silah_sec()
+            elif self.menu_sayfa == "dukkan":
+                self.dukkan_sec()
+        elif self.state == "ODA_SECIM":
+            self.oda_sec()
         elif self.state == "SHOP":
             self.shop_sec()
         elif self.state in ["OVER", "WIN"]:
@@ -648,17 +737,72 @@ class SoulKnight(QMainWindow):
                 self.silah = self.sel_char["silah"]
                 self.max_can = self.sel_char["baslangic_hp"]
                 self.p_can = self.max_can
+                self.p_zirh = 0
                 self.oyun_baslat()
 
-    def silah_sec(self):
-        silah_keys = list(SILAHLAR.keys())
-        if self.menu_secim < len(silah_keys):
-            key = silah_keys[self.menu_secim]
-            if key in self.acilan_silahlar:
-                self.silah = key
+    def oyun_baslat(self):
+        self.state = "PLAY"
+        self.seviye = 1
+        self.oda_numarasi = 1
+        self.oda_turu = "savas"
+        self.oda_dusman_sayisi = ODALAR["savas"]["dusman_sayisi"]
+        self.oda_temizlendi = False
+        self.odul_kazanildi = False
+        self.skor = 0
+        self.kill_count = 0
+        self.hasar_boost = 1.0
+        self.hiz_boost = 1.0
+        self.kritik_sans = 0.0
+        self.ok_sayisi = 1
 
-    def magaza_sec(self):
-        # Karakter satın al
+    def oda_sec(self):
+        # Sonraki odayı belirle
+        if self.oda_turu == "boss":
+            self.seviye += 1
+        
+        self.oda_numarasi += 1
+        
+        # Oda seçimi - Soul Knight tarzı
+        if self.menu_secim == 0:
+            self.oda_turu = "savas"
+        elif self.menu_secim == 1:
+            self.oda_turu = "zorlu"
+        elif self.menu_secim == 2:
+            self.oda_turu = "sandik"
+        elif self.menu_secim == 3:
+            self.oda_turu = "dukkan"
+        elif self.menu_secim == 4:
+            self.oda_turu = "istirahat"
+        elif self.menu_secim == 5:
+            self.oda_turu = "boss"
+        
+        oda_bilgi = ODALAR[self.oda_turu]
+        
+        if self.oda_turu == "dukkan":
+            self.state = "SHOP"
+            self.show_message("DÜKKAN", Qt.cyan)
+        elif self.oda_turu == "istirahat":
+            self.p_can = min(self.max_can, self.p_can + self.max_can * 0.5)
+            self.show_message("İSTİRAAT! Can +50%", Qt.green)
+            self.state = "PLAY"
+            self.oda_temizlendi = False
+            self.odul_kazanildi = False
+            QTimer.singleShot(2000, self.oda_secimi_goster)
+        else:
+            self.oda_dusman_sayisi = oda_bilgi["dusman_sayisi"]
+            self.oda_temizlendi = False
+            self.odul_kazanildi = False
+            self.state = "PLAY"
+        
+        self.enemies = []
+        self.bullets = []
+        self.powerups = []
+        self.sandiklar = []
+        self.p_pos = QPointF(600, 450)
+        
+        self.show_message("ODA {} - {}".format(self.oda_numarasi, oda_bilgi["ad"]), oda_bilgi["renk"])
+
+    def dukkan_sec(self):
         karakter_keys = list(KARAKTERLER.keys())
         if self.menu_secim < len(karakter_keys):
             key = karakter_keys[self.menu_secim]
@@ -669,14 +813,12 @@ class SoulKnight(QMainWindow):
                     self.acilan_karakterler.append(key)
                     self.kayit["karakterler"] = self.acilan_karakterler
                     self.kaydet()
-                    self.show_message("{} SATIN ALINDI!".format(kar['ad']), kar["renk"])
+                    self.show_message("{} ALINDI!".format(kar['ad']), kar["renk"])
 
     def shop_sec(self):
-        """Dükkan işlemleri"""
         silah_keys = list(SILAHLAR.keys())
         power_keys = list(POWER_UPLAR.keys())
         
-        # İlk 8 silah veya güçlendirme
         if self.menu_secim < len(silah_keys):
             key = silah_keys[self.menu_secim]
             silah = SILAHLAR[key]
@@ -694,25 +836,7 @@ class SoulKnight(QMainWindow):
                 self.para -= power["fiyat"]
                 self.powerup_al({"tur": p_key, "bilgi": power})
         elif self.menu_secim == len(silah_keys) + len(power_keys):
-            # Devam et
-            self.state = "PLAY"
-            self.sonraki_oda()
-
-    def oyun_baslat(self):
-        self.state = "PLAY"
-        self.seviye = 1
-        self.oda_numarasi = 1
-        self.oda_turu = "normal"
-        oda_bilgi = ODALAR["normal"]
-        self.oda_dusman_sayisi = oda_bilgi["dusman_sayisi"]
-        self.oda_temizlendi = False
-        self.skor = 0
-        self.kill_count = 0
-        self.p_zirh = 0
-        self.hasar_boost = 1.0
-        self.hiz_boost = 1.0
-        self.savurma_boost = 1.0
-        self.kritik_sans = 0.0
+            self.oda_sec()
 
     def mouseMoveEvent(self, event): 
         self.mouse_pos = event.pos()
@@ -720,11 +844,11 @@ class SoulKnight(QMainWindow):
     def keyPressEvent(self, event):
         if self.state == "MENU":
             if event.key() == Qt.Key_Left:
-                self.menu_sayfa = {"magaza": "karakter", "silah": "magaza", "karakter": "silah"}.get(self.menu_sayfa, "karakter")
+                self.menu_sayfa = {"dukkan": "karakter", "karakter": "dukkan"}.get(self.menu_sayfa, "karakter")
                 self.menu_secim = 0
                 self.update()
             elif event.key() == Qt.Key_Right:
-                self.menu_sayfa = {"karakter": "magaza", "magaza": "silah", "silah": "karakter"}.get(self.menu_sayfa, "magaza")
+                self.menu_sayfa = {"karakter": "dukkan", "dukkan": "karakter"}.get(self.menu_sayfa, "dukkan")
                 self.menu_secim = 0
                 self.update()
             elif event.key() == Qt.Key_Up:
@@ -736,6 +860,28 @@ class SoulKnight(QMainWindow):
             elif event.key() == Qt.Key_Return:
                 if self.menu_sayfa == "karakter":
                     self.karakter_sec()
+        elif self.state == "ODA_SECIM":
+            if event.key() == Qt.Key_Up:
+                self.menu_secim = max(0, self.menu_secim - 1)
+                self.update()
+            elif event.key() == Qt.Key_Down:
+                self.menu_secim = min(5, self.menu_secim + 1)
+                self.update()
+            elif event.key() == Qt.Key_Return:
+                self.oda_sec()
+        elif self.state == "SHOP":
+            if event.key() == Qt.Key_Up:
+                self.menu_secim = max(0, self.menu_secim - 1)
+                self.update()
+            elif event.key() == Qt.Key_Down:
+                max_idx = len(SILAHLAR) + len(POWER_UPLAR)
+                self.menu_secim = min(max_idx, self.menu_secim + 1)
+                self.update()
+            elif event.key() == Qt.Key_Return:
+                self.shop_sec()
+            elif event.key() == Qt.Key_Escape:
+                self.state = "PLAY"
+                self.oda_sec()
         elif event.key() == Qt.Key_Escape:
             if self.state == "PLAY":
                 self.state = "PAUSE"
@@ -743,9 +889,8 @@ class SoulKnight(QMainWindow):
                 self.state = "PLAY"
         elif event.key() == Qt.Key_S:
             self.kaydet()
-            self.show_message("OYUN KAYDEDİLDİ!", Qt.green)
-        elif event.key() in [Qt.Key_1, Qt.Key_2, Qt.Key_3, Qt.Key_4]:
-            # Silah değiştirme
+            self.show_message("KAYDEDİLDİ!", Qt.green)
+        elif event.key() in [Qt.Key_1, Qt.Key_2, Qt.Key_3, Qt.Key_4, Qt.Key_5]:
             silahlar = list(SILAHLAR.keys())
             idx = event.key() - Qt.Key_1
             if idx < len(silahlar) and silahlar[idx] in self.acilan_silahlar:
@@ -773,67 +918,71 @@ class SoulKnight(QMainWindow):
             vy = dy/dist * silah_bilgi["hiz"]
             
             if silah_bilgi["tur"] == "yakın":
-                # Kılıç - savurma
+                # Kılıç saldırısı
                 for e in self.enemies[:]:
-                    if math.hypot(e['p'].x()-self.p_pos.x(), e['p'].y()-self.p_pos.y()) < 60:
-                        hasar = silah_bilgi["hasar"] * self.hasar_boost * self.savurma_boost
+                    if math.hypot(e['p'].x()-self.p_pos.x(), e['p'].y()-self.p_pos.y()) < 70:
+                        hasar = silah_bilgi["hasar"] * self.hasar_boost
                         e['hp'] -= hasar
-                        e['p'] += QPointF(dx/dist * 20, dy/dist * 20)  # Geri itme
+                        e['p'] += QPointF(dx/dist * 30, dy/dist * 30)
                         self.sparks.append(SparkEffect(e['p'], Qt.cyan))
                         
                         if e['hp'] <= 0:
                             self.dusman_oldu(e)
                 
-                self.shake_amount = 3
-                self.glows.append(GlowEffect(self.p_pos, Qt.cyan, 30))
+                self.shake_amount = 4
+                self.glows.append(GlowEffect(self.p_pos, Qt.cyan, 35))
                 
-            elif silah_bilgi["tur"] == "ates":
-                # Ateşli silahlar - çoklu mermi
-                if self.silah == "pompali":
-                    for _ in range(5):
-                        aci = random.uniform(-0.4, 0.4)
+            elif silah_bilgi["tur"] in ["ates", "buz", "elektrik", "lazer"]:
+                # Ateşli silahlar
+                if self.silah == "pompa":
+                    for _ in range(6):
+                        aci = random.uniform(-0.5, 0.5)
                         self.bullets.append({
                             "p": QPointF(self.p_pos),
                             "v": QPointF(
                                 vx * math.cos(aci) - vy * math.sin(aci),
                                 vx * math.sin(aci) + vy * math.cos(aci)
                             ),
-                            "omr": 30
+                            "omr": 25
                         })
-                    self.shake_amount = 5
+                    self.shake_amount = 6
                 else:
-                    self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 60})
+                    self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 50})
                 
-            elif silah_bilgi["tur"] == "alev":
-                # Alev makinesi - kısa mesafe yayılım
-                for _ in range(3):
-                    aci = random.uniform(-0.5, 0.5)
-                    self.bullets.append({
-                        "p": QPointF(self.p_pos),
-                        "v": QPointF(vx * 0.5 * math.cos(aci), vy * 0.5 * math.sin(aci)),
-                        "omr": 15
-                    })
+                if silah_bilgi["tur"] in ["ates", "buz", "elektrik"]:
+                    self.glows.append(GlowEffect(self.p_pos, silah_bilgi["renk"], 15))
                 
-            elif silah_bilgi["tur"] == "büyü":
-                # Büyü - mermi
-                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 50})
+            elif silah_bilgi["tur"] == "uzak":
+                # Yay - çoklu ok
+                for i in range(self.ok_sayisi):
+                    if i == 0:
+                        self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 60})
+                    else:
+                        aci = random.uniform(-0.2, 0.2)
+                        self.bullets.append({
+                            "p": QPointF(self.p_pos),
+                            "v": QPointF(
+                                vx * math.cos(aci) - vy * math.sin(aci),
+                                vx * math.sin(aci) + vy * math.cos(aci)
+                            ),
+                            "omr": 55
+                        })
+                
+            elif silah_bilgi["tur"] == "firlatilan":
+                # Bıçak
+                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 35})
+            
+            elif silah_bilgi["tur"] in ["kutsal", "nebula", "kutsal_kilic"]:
+                # Özel silahlar
+                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 45})
                 self.glows.append(GlowEffect(self.p_pos, silah_bilgi["renk"], 20))
                 
-            elif silah_bilgi["tur"] == "buz":
-                # Buz - yavaşlatıcı
-                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 45})
-                
-            elif silah_bilgi["tur"] == "elektrik":
-                # Yıldırım - zincirleme
-                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 40})
-                
             else:
-                # Normal mermi
-                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 60})
-                
+                self.bullets.append({"p": QPointF(self.p_pos), "v": QPointF(vx, vy), "omr": 50})
+            
             # Elf çift ok
             if self.sel_char.get("ok") and silah_bilgi["tur"] == "uzak":
-                offset = 15
+                offset = 18
                 perp_x = -dy/dist * offset
                 perp_y = dx/dist * offset
                 self.bullets.append({"p": QPointF(self.p_pos.x()+perp_x, self.p_pos.y()+perp_y), "v": QPointF(vx, vy), "omr": 60})
@@ -848,10 +997,10 @@ class SoulKnight(QMainWindow):
                         random.randint(-self.shake_amount, self.shake_amount))
 
         # Arka plan
-        if self.state == "PLAY" or self.state == "SHOP":
+        if self.state in ["PLAY", "SHOP", "ODA_SECIM"]:
             self.ciz_arka_plan(p)
         else:
-            p.fillRect(self.rect(), QColor(20, 10, 30))
+            p.fillRect(self.rect(), QColor(15, 10, 25))
 
         if self.state == "MENU":
             self.ciz_menu(p)
@@ -859,6 +1008,8 @@ class SoulKnight(QMainWindow):
             self.ciz_oyun(p)
         elif self.state == "SHOP":
             self.ciz_shop(p)
+        elif self.state == "ODA_SECIM":
+            self.ciz_oda_secim(p)
         elif self.state == "PAUSE":
             self.ciz_oyun(p)
             self.ciz_pause(p)
@@ -866,102 +1017,104 @@ class SoulKnight(QMainWindow):
             self.ciz_game_over(p)
 
     def ciz_arka_plan(self, p):
-        # Zemin
         grad = QLinearGradient(0, 0, 0, 800)
         
         if self.oda_turu == "boss":
-            grad.setColorAt(0, QColor(80, 0, 0))
-            grad.setColorAt(1, QColor(20, 0, 0))
-        elif self.oda_turu == "magaza":
-            grad.setColorAt(0, QColor(0, 60, 0))
-            grad.setColorAt(1, QColor(0, 20, 0))
-        elif self.oda_turu == "dinlenme":
-            grad.setColorAt(0, QColor(0, 0, 80))
-            grad.setColorAt(1, QColor(0, 0, 30))
+            grad.setColorAt(0, QColor(60, 0, 0))
+            grad.setColorAt(1, QColor(15, 0, 0))
+        elif self.oda_turu == "dukkan":
+            grad.setColorAt(0, QColor(0, 50, 0))
+            grad.setColorAt(1, QColor(0, 15, 0))
+        elif self.oda_turu == "istirahat":
+            grad.setColorAt(0, QColor(0, 0, 60))
+            grad.setColorAt(1, QColor(0, 0, 20))
+        elif self.oda_turu == "sandik":
+            grad.setColorAt(0, QColor(60, 50, 0))
+            grad.setColorAt(1, QColor(20, 15, 0))
         else:
-            grad.setColorAt(0, QColor(50, 30, 60))
-            grad.setColorAt(1, QColor(20, 10, 30))
+            grad.setColorAt(0, QColor(40, 25, 50))
+            grad.setColorAt(1, QColor(15, 8, 25))
         
         p.fillRect(self.rect(), grad)
         
-        # Oda çerçevesi
-        p.setPen(QPen(QColor(100, 80, 60), 8))
-        p.setBrush(Qt.NoBrush)
-        p.drawRect(30, 80, 1140, 650)
+        # Zemin deseni
+        p.setPen(QPen(QColor(255, 255, 255, 8), 1))
+        for i in range(40, 1160, 40):
+            p.drawLine(i, 60, i, 740)
+        for i in range(80, 740, 40):
+            p.drawLine(40, i, 1160, i)
         
-        # Izgara deseni
-        p.setPen(QPen(QColor(255, 255, 255, 10), 1))
-        for i in range(50, 1150, 50):
-            p.drawLine(i, 80, i, 730)
-        for i in range(100, 730, 50):
-            p.drawLine(30, i, 1170, i)
+        # Oda çerçevesi
+        p.setPen(QPen(QColor(80, 60, 40), 10))
+        p.setBrush(Qt.NoBrush)
+        p.drawRect(25, 55, 1150, 690)
 
     def ciz_menu(self, p):
-        p.fillRect(self.rect(), QColor(15, 5, 25))
+        p.fillRect(self.rect(), QColor(10, 5, 20))
         
-        # Başlık
-        grad = QLinearGradient(0, 40, 0, 100)
-        grad.setColorAt(0, QColor(255, 100, 50))
-        grad.setColorAt(0.5, QColor(200, 50, 150))
-        grad.setColorAt(1, QColor(100, 50, 255))
+        # Başlık - Soul Knight tarzı
+        grad = QLinearGradient(0, 30, 0, 90)
+        grad.setColorAt(0, QColor(255, 150, 50))
+        grad.setColorAt(0.5, QColor(255, 50, 150))
+        grad.setColorAt(1, QColor(150, 50, 255))
         
         p.setPen(Qt.white)
-        p.setFont(QFont("Impact", 48))
-        p.drawText(self.rect().adjusted(0, 20, 0, 0), Qt.AlignCenter, "⚔️ SOUL KNIGHT ⚔️")
+        p.setFont(QFont("Impact", 52))
+        p.drawText(self.rect().adjusted(0, 10, 0, 0), Qt.AlignCenter, "⚔️ SOUL KNIGHT ⚔️")
         
         p.setFont(QFont("Arial", 16))
         p.setPen(QColor(255, 215, 0))
-        p.drawText(QRect(0, 90, 1200, 30), Qt.AlignCenter, "💰 Para: {}".format(self.para))
+        p.drawText(QRect(0, 85, 1200, 30), Qt.AlignCenter, "💰 Para: {}".format(self.para))
         
         # Menü sekmeleri
-        sekmeler = ["KARAKTER", "Silah DÜKKANI", "DÜKKAN"]
-        secili_index = {"karakter": 0, "silah": 1, "magaza": 2}[self.menu_sayfa]
+        sekmeler = ["KARAKTER SEÇ", "DÜKKAN"]
+        secili_index = {"karakter": 0, "dukkan": 1}[self.menu_sayfa]
         
         p.setFont(QFont("Arial", 14))
         for i, sekme in enumerate(sekmeler):
-            x = 250 + i * 250
+            x = 350 + i * 350
             if i == secili_index:
-                p.setBrush(QColor(150, 50, 0))
+                p.setBrush(QColor(180, 60, 0))
                 p.setPen(QPen(QColor(255, 150, 50), 2))
             else:
-                p.setBrush(QColor(40, 20, 20))
-                p.setPen(QPen(QColor(100, 50, 30), 1))
-            p.drawRoundedRect(x, 130, 220, 40, 10, 10)
+                p.setBrush(QColor(35, 20, 30))
+                p.setPen(QPen(QColor(80, 40, 50), 1))
+            p.drawRoundedRect(x, 125, 250, 40, 10, 10)
             p.setPen(Qt.white)
-            p.drawText(QRect(x, 130, 220, 40), Qt.AlignCenter, sekme)
+            p.drawText(QRect(x, 125, 250, 40), Qt.AlignCenter, sekme)
         
-        # İçerik
         if self.menu_sayfa == "karakter":
             self.ciz_karakter_secim(p)
-        elif self.menu_sayfa == "silah":
-            self.ciz_silah_secim(p)
-        elif self.menu_sayfa == "magaza":
-            self.ciz_magaza(p)
+        elif self.menu_sayfa == "dukkan":
+            self.ciz_dukkan(p)
         
-        # Alt bilgi
         p.setPen(QColor(150, 150, 150))
         p.setFont(QFont("Arial", 11))
-        p.drawText(QRect(0, 720, 1200, 30), Qt.AlignCenter, "← → Sayfa | ↑↓ Seç | ENTER Oyna | S Kaydet | ESC Çıkış")
+        p.drawText(QRect(0, 730, 1200, 30), Qt.AlignCenter, "← → Sayfa | ↑↓ Seç | ENTER Oyna | S Kaydet | ESC Çıkış")
 
     def ciz_karakter_secim(self, p):
         karakterler = list(KARAKTERLER.items())
-        kart_genislik = 170
-        kart_yukseklik = 200
-        baslangic_x = (1200 - len(karakterler) * kart_genislik) // 2
+        cols = 5
+        kart_genislik = 200
+        kart_yukseklik = 180
+        baslangic_x = (1200 - cols * kart_genislik) // 2
+        baslangic_y = 180
         
         for i, (key, kar) in enumerate(karakterler):
-            x = baslangic_x + i * kart_genislik
-            y = 200
+            col = i % cols
+            row = i // cols
+            x = baslangic_x + col * kart_genislik
+            y = baslangic_y + row * kart_yukseklik
             
             satin_alindi = key in self.acilan_karakterler
             
             if i == self.menu_secim:
-                p.setBrush(QColor(150, 75, 0))
-                p.setPen(QPen(QColor(255, 150, 0), 3))
+                p.setBrush(QColor(180, 90, 0))
+                p.setPen(QPen(QColor(255, 180, 0), 3))
                 p.drawRoundedRect(x-5, y-5, kart_genislik+10, kart_yukseklik+10, 15, 15)
             else:
-                p.setBrush(QColor(35, 20, 35))
-                p.setPen(QPen(QColor(80, 40, 60), 1))
+                p.setBrush(QColor(30, 20, 35))
+                p.setPen(QPen(QColor(70, 40, 60), 1))
                 p.drawRoundedRect(x, y, kart_genislik, kart_yukseklik, 10, 10)
             
             # Karakter ikonu
@@ -969,14 +1122,14 @@ class SoulKnight(QMainWindow):
             p.setPen(Qt.NoPen)
             p.drawEllipse(QPoint(x + kart_genislik//2, y + 45), 35, 35)
             
-            # Göz (karakter yönü)
+            # Göz
             p.setBrush(kar["goz"])
-            p.drawEllipse(QPoint(x + kart_genislik//2 - 10, y + 40), 6, 4)
-            p.drawEllipse(QPoint(x + kart_genislik//2 + 10, y + 40), 6, 4)
+            p.drawEllipse(QPoint(x + kart_genislik//2 - 12, y + 40), 6, 4)
+            p.drawEllipse(QPoint(x + kart_genislik//2 + 12, y + 40), 6, 4)
             
             # İsim
-            p.setPen(Qt.white if satin_alindi else QColor(120, 120, 120))
-            p.setFont(QFont("Arial", 11, QFont.Bold))
+            p.setPen(Qt.white if satin_alindi else QColor(100, 100, 100))
+            p.setFont(QFont("Arial", 12, QFont.Bold))
             p.drawText(QRect(x, y + 85, kart_genislik, 20), Qt.AlignCenter, kar["ad"])
             
             # Özellik
@@ -987,116 +1140,111 @@ class SoulKnight(QMainWindow):
             # HP
             p.setPen(QColor(255, 100, 100))
             p.setFont(QFont("Arial", 8))
-            p.drawText(QRect(x, y + 125, kart_genislik, 15), Qt.AlignCenter, "❤️ {}".format(kar["baslangic_hp"]))
+            p.drawText(QRect(x, y + 122, kart_genislik, 15), Qt.AlignCenter, "❤️ {}".format(kar["baslangic_hp"]))
             
-            # Durum
             if satin_alindi:
                 p.setPen(Qt.green)
-                p.setFont(QFont("Arial", 12, QFont.Bold))
-                p.drawText(QRect(x, y + 160, kart_genislik, 25), Qt.AlignCenter, "SEÇ")
+                p.setFont(QFont("Arial", 13, QFont.Bold))
+                p.drawText(QRect(x, y + 150, kart_genislik, 25), Qt.AlignCenter, "SEÇ")
             else:
                 p.setPen(QColor(255, 215, 0))
                 p.setFont(QFont("Arial", 11))
-                p.drawText(QRect(x, y + 160, kart_genislik, 25), Qt.AlignCenter, "💰 {}".format(kar['fiyat']))
+                p.drawText(QRect(x, y + 150, kart_genislik, 25), Qt.AlignCenter, "💰 {}".format(kar['fiyat']))
 
-    def ciz_silah_secim(self, p):
-        silahlar = list(SILAHLAR.items())
-        kart_genislik = 160
-        kart_yukseklik = 160
-        baslangic_x = (1200 - len(silahlar) * kart_genislik) // 2
-        
-        p.setPen(Qt.white)
-        p.setFont(QFont("Arial", 14))
-        p.drawText(QRect(0, 190, 1200, 30), Qt.AlignCenter, "🔫 SİLAHINI SEÇ")
-        
-        for i, (key, silah) in enumerate(silahlar):
-            x = baslangic_x + i * kart_genislik
-            y = 230
-            
-            satin_alindi = key in self.acilan_silahlar
-            
-            if i == self.menu_secim:
-                p.setBrush(QColor(100, 50, 0))
-                p.setPen(QPen(Qt.yellow, 2))
-                p.drawRoundedRect(x-5, y-5, kart_genislik+10, kart_yukseklik+10, 12, 12)
-            else:
-                p.setBrush(QColor(30, 25, 35))
-                p.setPen(QPen(QColor(70, 50, 60), 1))
-                p.drawRoundedRect(x, y, kart_genislik, kart_yukseklik, 8, 8)
-            
-            # Silah ikonu
-            p.setBrush(silah["renk"])
-            p.setPen(Qt.NoPen)
-            p.drawEllipse(QPoint(x + kart_genislik//2, y + 40), 25, 25)
-            
-            # İsim
-            p.setPen(Qt.white if satin_alindi else QColor(100, 100, 100))
-            p.setFont(QFont("Arial", 10, QFont.Bold))
-            p.drawText(QRect(x, y + 70, kart_genislik, 18), Qt.AlignCenter, silah["ad"])
-            
-            # Tür
-            p.setPen(silah["renk"])
-            p.setFont(QFont("Arial", 8))
-            p.drawText(QRect(x, y + 90, kart_genislik, 15), Qt.AlignCenter, silah["tur"].upper())
-            
-            # Durum
-            if satin_alindi:
-                p.setPen(Qt.green)
-                p.setFont(QFont("Arial", 10, QFont.Bold))
-                p.drawText(QRect(x, y + 130, kart_genislik, 20), Qt.AlignCenter, "✓")
-            else:
-                p.setPen(QColor(255, 215, 0))
-                p.setFont(QFont("Arial", 10))
-                p.drawText(QRect(x, y + 130, kart_genislik, 20), Qt.AlignCenter, "💰 {}".format(silah['fiyat']))
-
-    def ciz_magaza(self, p):
+    def ciz_dukkan(self, p):
         karakterler = list(KARAKTERLER.items())
-        kart_genislik = 170
-        kart_yukseklik = 140
-        baslangic_x = (1200 - len(karakterler) * kart_genislik) // 2
+        cols = 5
+        kart_genislik = 200
+        kart_yukseklik = 150
+        baslangic_x = (1200 - cols * kart_genislik) // 2
+        baslangic_y = 180
         
         p.setPen(Qt.white)
         p.setFont(QFont("Arial", 14))
-        p.drawText(QRect(0, 190, 1200, 30), Qt.AlignCenter, "🛒 YENİ KARAKTER AL")
+        p.drawText(QRect(0, 170, 1200, 30), Qt.AlignCenter, "🛒 YENİ KARAKTER AL")
         
         for i, (key, kar) in enumerate(karakterler):
-            x = baslangic_x + i * kart_genislik
-            y = 230
+            col = i % cols
+            row = i // cols
+            x = baslangic_x + col * kart_genislik
+            y = baslangic_y + row * kart_yukseklik
             
             satin_alindi = key in self.acilan_karakterler
             
             if i == self.menu_secim:
-                p.setBrush(QColor(80, 40, 0))
+                p.setBrush(QColor(100, 50, 0))
                 p.setPen(QPen(QColor(255, 200, 0), 2))
                 p.drawRoundedRect(x-5, y-5, kart_genislik+10, kart_yukseklik+10, 12, 12)
             else:
-                p.setBrush(QColor(30, 25, 30))
+                p.setBrush(QColor(30, 25, 25))
                 p.setPen(QPen(QColor(80, 50, 30), 1))
                 p.drawRoundedRect(x, y, kart_genislik, kart_yukseklik, 8, 8)
             
-            # İkon
             p.setBrush(kar["renk"])
             p.setPen(Qt.NoPen)
             p.drawEllipse(QPoint(x + kart_genislik//2, y + 35), 25, 25)
             
-            # İsim
             p.setPen(Qt.white)
-            p.setFont(QFont("Arial", 10, QFont.Bold))
+            p.setFont(QFont("Arial", 11, QFont.Bold))
             p.drawText(QRect(x, y + 65, kart_genislik, 18), Qt.AlignCenter, kar["ad"])
             
-            # Durum
             if satin_alindi:
                 p.setPen(Qt.green)
-                p.setFont(QFont("Arial", 9))
-                p.drawText(QRect(x, y + 100, kart_genislik, 20), Qt.AlignCenter, "VAR")
+                p.setFont(QFont("Arial", 10))
+                p.drawText(QRect(x, y + 110, kart_genislik, 20), Qt.AlignCenter, "VAR")
             else:
                 p.setPen(QColor(255, 215, 0))
                 p.setFont(QFont("Arial", 11))
-                p.drawText(QRect(x, y + 100, kart_genislik, 20), Qt.AlignCenter, "💰 {}".format(kar['fiyat']))
+                p.drawText(QRect(x, y + 110, kart_genislik, 20), Qt.AlignCenter, "💰 {}".format(kar['fiyat']))
+
+    def ciz_oda_secim(self, p):
+        p.fillRect(self.rect(), QColor(10, 5, 20))
+        
+        p.setPen(Qt.white)
+        p.setFont(QFont("Impact", 40))
+        p.drawText(self.rect().adjusted(0, 30, 0, 0), Qt.AlignCenter, "🗺️ SONRAKİ ODAYI SEÇ")
+        
+        p.setFont(QFont("Arial", 18))
+        p.setPen(QColor(255, 215, 0))
+        p.drawText(QRect(0, 90, 1200, 30), Qt.AlignCenter, "💰 Para: {}".format(self.para))
+        
+        # Oda seçenekleri
+        oda_secenekleri = [
+            ("savas", "Savaş Odası", "⚔️", "Normal düşmanlar"),
+            ("zorlu", "Zorlu Oda", "💀", "Güçlü düşmanlar"),
+            ("sandik", "Hazine Odası", "📦", "Sandık + az düşman"),
+            ("dukkan", "Dükkan", "🏪", "Silah ve güçlendirme al"),
+            ("istirahat", "İstirahat", "⛺", "Can yenileme"),
+            ("boss", "Boss Odası", "👹", "BOSS SAVAŞI"),
+        ]
+        
+        p.setFont(QFont("Arial", 14))
+        for i, (tur, ad, icon, desc) in enumerate(oda_secenekleri):
+            y = 160 + i * 90
+            
+            if i == self.menu_secim:
+                p.setBrush(QColor(150, 75, 0))
+                p.setPen(QPen(QColor(255, 200, 0), 3))
+                p.drawRoundedRect(250, y-5, 700, 80, 15, 15)
+            else:
+                p.setBrush(QColor(40, 25, 35))
+                p.setPen(QPen(QColor(80, 50, 60), 1))
+                p.drawRoundedRect(250, y, 700, 70, 10, 10)
+            
+            p.setPen(Qt.white if i == self.menu_secim else QColor(180, 180, 180))
+            p.setFont(QFont("Arial", 16, QFont.Bold))
+            p.drawText(QRect(280, y + 10, 300, 30), Qt.AlignLeft, "{} {}".format(icon, ad))
+            
+            p.setPen(QColor(150, 150, 150))
+            p.setFont(QFont("Arial", 12))
+            p.drawText(QRect(280, y + 40, 500, 20), Qt.AlignLeft, desc)
+        
+        p.setPen(QColor(150, 150, 150))
+        p.setFont(QFont("Arial", 11))
+        p.drawText(QRect(0, 730, 1200, 30), Qt.AlignCenter, "↑↓ Oda Seç | ENTER Devam Et")
 
     def ciz_shop(self, p):
-        # Dükkan arka plan
-        p.fillRect(self.rect(), QColor(20, 40, 20))
+        p.fillRect(self.rect(), QColor(15, 35, 15))
         
         p.setPen(Qt.white)
         p.setFont(QFont("Impact", 36))
@@ -1106,28 +1254,27 @@ class SoulKnight(QMainWindow):
         p.setPen(QColor(255, 215, 0))
         p.drawText(QRect(0, 70, 1200, 30), Qt.AlignCenter, "💰 Para: {}".format(self.para))
         
-        # Silahlar
         silahlar = list(SILAHLAR.items())
         powerups = list(POWER_UPLAR.items())
         
         p.setFont(QFont("Arial", 14))
         p.setPen(Qt.white)
-        p.drawText(QRect(0, 110, 1200, 25), Qt.AlignCenter, "🔫 SILAHLAR")
+        p.drawText(QRect(0, 110, 1200, 25), Qt.AlignCenter, "🔫 SİLAHLAR")
         
         for i, (key, silah) in enumerate(silahlar):
-            x = 50 + (i % 4) * 280
+            x = 50 + (i % 4) * 285
             y = 140 + (i // 4) * 70
             
             satin_alindi = key in self.acilan_silahlar
             
             if i == self.menu_secim:
-                p.setBrush(QColor(100, 50, 0))
+                p.setBrush(QColor(120, 60, 0))
                 p.setPen(QPen(Qt.yellow, 2))
-                p.drawRoundedRect(x-5, y-5, 260, 55, 8, 8)
+                p.drawRoundedRect(x-5, y-5, 270, 55, 8, 8)
             else:
                 p.setBrush(QColor(40, 30, 30))
                 p.setPen(QPen(QColor(80, 50, 30), 1))
-                p.drawRoundedRect(x, y, 260, 55, 5, 5)
+                p.drawRoundedRect(x, y, 270, 55, 5, 5)
             
             p.setBrush(silah["renk"])
             p.setPen(Qt.NoPen)
@@ -1135,286 +1282,28 @@ class SoulKnight(QMainWindow):
             
             p.setPen(Qt.white if satin_alindi else QColor(200, 200, 200))
             p.setFont(QFont("Arial", 11, QFont.Bold))
-            p.drawText(QRect(x + 50, y + 10, 150, 20), Qt.AlignLeft, silah["ad"])
+            p.drawText(QRect(x + 50, y + 8, 150, 18), Qt.AlignLeft, silah["ad"])
             
             if satin_alindi:
                 p.setPen(Qt.green)
                 p.setFont(QFont("Arial", 9))
-                p.drawText(QRect(x + 50, y + 32, 150, 15), Qt.AlignLeft, "SAHİP")
+                p.drawText(QRect(x + 50, y + 28, 150, 15), Qt.AlignLeft, "SAHİP")
             else:
                 p.setPen(QColor(255, 215, 0))
                 p.setFont(QFont("Arial", 10))
-                p.drawText(QRect(x + 50, y + 32, 150, 15), Qt.AlignLeft, "💰 {}".format(silah['fiyat']))
+                p.drawText(QRect(x + 50, y + 28, 150, 15), Qt.AlignLeft, "💰 {}".format(silah['fiyat']))
         
         # Güçlendirmeler
         p.setFont(QFont("Arial", 14))
         p.setPen(Qt.white)
-        p.drawText(QRect(0, 350, 1200, 25), Qt.AlignCenter, "⚡ GÜÇLENDİRMELER")
+        p.drawText(QRect(0, 360, 1200, 25), Qt.AlignCenter, "⚡ GÜÇLENDİRMELER")
         
         for i, (key, power) in enumerate(powerups):
-            x = 50 + (i % 4) * 280
-            y = 380 + (i // 4) * 60
+            x = 50 + (i % 4) * 285
+            y = 390 + (i // 4) * 60
             
             if i + len(silahlar) == self.menu_secim:
-                p.setBrush(QColor(50, 50, 100))
-                p.setPen(QPen(Qt.cyan, 2))
-                p.drawRoundedRect(x-5, y-5, 260, 50, 8, 8)
-            else:
-                p.setBrush(QColor(30, 30, 50))
-                p.setPen(QPen(QColor(50, 50, 80), 1))
-                p.drawRoundedRect(x, y, 260, 50, 5, 5)
-            
-            p.setBrush(power["renk"])
-            p.setPen(Qt.NoPen)
-            p.drawEllipse(QPoint(x + 25, y + 25), 15, 15)
-            
-            p.setPen(Qt.white)
-            p.setFont(QFont("Arial", 10, QFont.Bold))
-            p.drawText(QRect(x + 50, y + 10, 150, 15), Qt.AlignLeft, power["aciklama"])
-            
-            p.setPen(QColor(255, 215, 0))
-            p.setFont(QFont("Arial", 9))
-            p.drawText(QRect(x + 50, y + 28, 150, 15), Qt.AlignLeft, "💰 {}".format(power['fiyat']))
-        
-        # Devam butonu
-        if len(silahlar) + len(powerups) == self.menu_secim:
-            p.setBrush(QColor(0, 100, 0))
-            p.setPen(QPen(Qt.green, 3))
-            p.drawRoundedRect(450, 600, 300, 60, 10, 10)
-            p.setPen(Qt.white)
-            p.setFont(QFont("Arial", 18, QFont.Bold))
-            p.drawText(QRect(450, 600, 300, 60), Qt.AlignCenter, "DEVAM ET ▶")
-        else:
-            p.setBrush(QColor(20, 60, 20))
-            p.setPen(QPen(QColor(0, 150, 0), 2))
-            p.drawRoundedRect(450, 600, 300, 60, 10, 10)
-            p.setPen(QColor(100, 200, 100))
-            p.setFont(QFont("Arial", 16))
-            p.drawText(QRect(450, 600, 300, 60), Qt.AlignCenter, "DEVAM ET ▶")
-        
-        # Alt bilgi
-        p.setPen(QColor(150, 150, 150))
-        p.setFont(QFont("Arial", 11))
-        p.drawText(QRect(0, 680, 1200, 30), Qt.AlignCenter, "↑↓ Seç | ENTER Satın Al/Devam | ESC Geri")
-
-    def ciz_oyun(self, p):
-        # Efektler
-        for g in self.glows:
-            g.draw(p)
-        
-        for s in self.sparks:
-            s.draw(p)
-        
-        # Parçacıklar
-        for part in self.particles:
-            c = QColor(part.color)
-            c.setAlpha(part.life)
-            p.setBrush(c)
-            p.drawRect(QRectF(part.pos.x()-part.size/2, part.pos.y()-part.size/2, part.size, part.size))
-
-        # Güçlendirmeler
-        for pu in self.powerups:
-            bilgi = POWER_UPLAR[pu["tur"]]
-            p.setBrush(bilgi["renk"])
-            p.setPen(Qt.white)
-            p.drawEllipse(pu["p"], 12, 12)
-            p.setFont(QFont("Arial", 12, QFont.Bold))
-            p.drawText(int(pu["p"].x()-4), int(pu["p"].y()+4), bilgi["sembol"])
-
-        # Düşmanlar
-        for e in self.enemies:
-            tur_bilgi = DUSMAN_TURLERI[e["tur"]]
-            renk = tur_bilgi["renk"]
-            
-            if e.get("yavas"):
-                renk = QColor(150, 200, 255)
-            if e.get("yaniyor", 0) > 0:
-                renk = QColor(255, 100, 0)
-            if e.get("asitli", 0) > 0:
-                renk = QColor(0, 255, 0)
-            
-            self.ciz_karakter(p, e["p"], renk, tur_bilgi["boyut"], e["tur"] == "boss1" or e["tur"] == "boss2")
-            
-            # HP barı
-            if e["hp"] < e["max_hp"]:
-                hp_oran = e["hp"] / e["max_hp"]
-                p.setBrush(QColor(50, 0, 0))
-                p.setPen(Qt.NoPen)
-                p.drawRect(e["p"].x()-20, e["p"].y()-tur_bilgi["boyut"]-10, 40, 5)
-                p.setBrush(Qt.red)
-                p.drawRect(e["p"].x()-20, e["p"].y()-tur_bilgi["boyut"]-10, 40*hp_oran, 5)
-
-        # Mermiler
-        silah_bilgi = self.silah_bilgi()
-        for b in self.bullets:
-            p.setBrush(silah_bilgi["renk"])
-            p.setPen(Qt.NoPen)
-            p.drawEllipse(b["p"], silah_bilgi["boyut"], silah_bilgi["boyut"])
-            
-            # Glow
-            c = QColor(silah_bilgi["renk"])
-            c.setAlpha(80)
-            p.setBrush(c)
-            p.drawEllipse(b["p"], silah_bilgi["boyut"]+3, silah_bilgi["boyut"]+3)
-
-        # Oyuncu
-        self.ciz_karakter(p, self.p_pos, self.sel_char["renk"], 25, False, True)
-        
-        # UI
-        self.ciz_ui(p)
-
-    def ciz_karakter(self, p, pos, renk, boyut, is_boss=False, is_player=False):
-        p.save()
-        p.translate(pos)
-        
-        if is_player:
-            p.rotate(math.degrees(self.oyuncu_yonu) + 90)
-        
-        # Gövde
-        p.setBrush(renk)
-        p.setPen(QPen(renk.darker(150), 2))
-        p.drawEllipse(-boyut//2, -boyut//2, boyut, boyut)
-        
-        # Gözler
-        p.setBrush(Qt.white)
-        if is_player:
-            p.drawRect(boyut//4, -boyut//4, boyut//3, boyut//3)
-        else:
-            p.drawRect(-boyut//3, -boyut//4, boyut//3, boyut//3)
-        
-        p.restore()
-
-    def ciz_ui(self, p):
-        # Üst bar
-        p.setBrush(QColor(0, 0, 0, 180))
-        p.drawRect(0, 0, 1200, 50)
-        
-        # Sol üst - Skor ve Para
-        p.setPen(Qt.white)
-        p.setFont(QFont("Consolas", 14, QFont.Bold))
-        p.drawText(15, 32, "🏆 {}".format(self.skor))
-        
-        p.setPen(QColor(255, 215, 0))
-        p.setFont(QFont("Arial", 13))
-        p.drawText(120, 32, "💰 {}".format(self.para))
-        
-        # Orta üst - Oda bilgisi
-        oda_bilgi = ODALAR[self.oda_turu]
-        p.setPen(oda_bilgi["renk"])
-        p.setFont(QFont("Arial", 14, QFont.Bold))
-        p.drawText(350, 32, "ODA {} - {}".format(self.oda_numarasi, oda_bilgi["ad"]))
-        
-        # Sağ üst - Silah
-        silah_bilgi = self.silah_bilgi()
-        p.setPen(silah_bilgi["renk"])
-        p.setFont(QFont("Arial", 12, QFont.Bold))
-        p.drawText(850, 32, "🔫 {}".format(silah_bilgi['ad'].upper()))
-        
-        # Alt bar - Can ve Zırh
-        p.setPen(Qt.white)
-        p.setFont(QFont("Arial", 11, QFont.Bold))
-        p.drawText(15, 770, "❤️")
-        
-        # Can barı
-        p.setBrush(QColor(40, 40, 40))
-        p.setPen(Qt.NoPen)
-        p.drawRect(50, 758, 200, 16)
-        
-        if self.p_can > 60:
-            p.setBrush(Qt.green)
-        elif self.p_can > 30:
-            p.setBrush(Qt.yellow)
-        else:
-            p.setBrush(Qt.red)
-        p.drawRect(52, 760, max(0, int(self.p_can * 1.96)), 12)
-        
-        p.setPen(Qt.white)
-        p.setFont(QFont("Arial", 10))
-        p.drawText(255, 770, "{}/{}".format(int(self.p_can), self.max_can))
-        
-        # Zırh
-        if self.p_zirh > 0:
-            p.setBrush(QColor(50, 50, 200))
-            p.setPen(Qt.NoPen)
-            p.drawRect(50, 778, int(self.p_zirh * 2), 4)
-            p.setPen(QColor(150, 150, 255))
-            p.setFont(QFont("Arial", 8))
-            p.drawText(255, 780, "Zırh: {}".format(int(self.p_zirh)))
-        
-        # Güçlendirmeler
-        x = 350
-        if self.hasar_boost > 1.0:
-            p.setPen(Qt.red)
-            p.setFont(QFont("Arial", 10))
-            p.drawText(x, 770, "⚔️+{}%".format(int((self.hasar_boost-1)*100)))
-            x += 60
-        
-        if self.kritik_sans > 0:
-            p.setPen(QColor(255, 165, 0))
-            p.setFont(QFont("Arial", 10))
-            p.drawText(x, 770, "💥{}%".format(int(self.kritik_sans*100)))
-            x += 60
-        
-        # Düşman sayısı
-        p.setPen(QColor(200, 200, 200))
-        p.setFont(QFont("Arial", 11))
-        if not self.oda_temizlendi and self.oda_turu not in ["magaza", "dinlenme"]:
-            p.drawText(1050, 770, "Düşman: {}/{}".format(len(self.enemies), self.oda_dusman_sayisi))
-        else:
-            p.setPen(Qt.green)
-            p.drawText(1050, 770, "✓ TEMİZ")
-        
-        # Mesaj
-        if hasattr(self, 'aktif_mesaj') and self.aktif_mesaj:
-            p.setPen(self.aktif_mesaj["renk"])
-            p.setFont(QFont("Arial", 24, QFont.Bold))
-            p.drawText(self.rect().adjusted(0, -100, 0, 0), Qt.AlignCenter, self.aktif_mesaj["metin"])
-            self.aktif_mesaj["sure"] -= 1
-            if self.aktif_mesaj["sure"] <= 0:
-                del self.aktif_mesaj
-
-    def ciz_pause(self, p):
-        p.fillRect(self.rect(), QColor(0, 0, 0, 150))
-        
-        p.setBrush(QColor(30, 30, 50))
-        p.setPen(QPen(QColor(100, 150, 255), 2))
-        p.drawRoundedRect(400, 280, 400, 240, 20, 20)
-        
-        p.setPen(Qt.white)
-        p.setFont(QFont("Impact", 36))
-        p.drawText(QRect(400, 300, 400, 50), Qt.AlignCenter, "⏸️ DURAKLADI")
-        
-        p.setFont(QFont("Arial", 16))
-        p.drawText(QRect(400, 370, 400, 30), Qt.AlignCenter, "Devam için ESC")
-        p.drawText(QRect(400, 410, 400, 30), Qt.AlignCenter, "Kaydet için S")
-        p.drawText(QRect(400, 450, 400, 30), Qt.AlignCenter, "Menü için M")
-
-    def ciz_game_over(self, p):
-        p.fillRect(self.rect(), QColor(0, 0, 0, 220))
-        
-        p.setPen(Qt.red)
-        p.setFont(QFont("Impact", 60))
-        p.drawText(self.rect().adjusted(0, -80, 0, 0), Qt.AlignCenter, "💀 OYUN BİTTİ 💀")
-        
-        p.setPen(Qt.white)
-        p.setFont(QFont("Arial", 28))
-        p.drawText(QRect(0, 250, 1200, 40), Qt.AlignCenter, "Skor: {}".format(self.skor))
-        
-        p.setPen(QColor(255, 215, 0))
-        p.setFont(QFont("Arial", 22))
-        p.drawText(QRect(0, 300, 1200, 35), Qt.AlignCenter, "Kazanılan Para: +{}".format(self.para))
-        
-        p.setPen(Qt.cyan)
-        p.setFont(QFont("Arial", 18))
-        p.drawText(QRect(0, 350, 1200, 30), Qt.AlignCenter, "Ulaşılan Oda: {}".format(self.oda_numarasi))
-        p.drawText(QRect(0, 380, 1200, 30), Qt.AlignCenter, "Öldürülen Düşman: {}".format(self.kill_count))
-        
-        p.setPen(Qt.green)
-        p.setFont(QFont("Arial", 22))
-        p.drawText(QRect(0, 480, 1200, 50), Qt.AlignCenter, "🎮 Tekrar oynamak için tıkla 🎮")
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = SoulKnight()
-    w.show()
-    sys.exit(app.exec_())
+                p.setBrush(QColor(0, 80, 0))
+                p.setPen(QPen(Qt.green, 2)) 
+                p.drawRoundedRect(x-5, y-5, 270, 50, 8, 8)
+                
