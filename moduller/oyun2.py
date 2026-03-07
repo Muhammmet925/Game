@@ -543,7 +543,7 @@ class SoulKnight(QMainWindow):
         elif self.oda_numarasi % 5 == 0:
             self.oda_turu = random.choice(["elite", "magaza", "dinlenme"])
         elif self.oda_numarasi % 3 == 0:
-            self.oda_turu = random.choice(["hazina", "normal"])
+            self.oda_turu = random.choice(["hazine", "normal"])
         else:
             self.oda_turu = "normal"
         
