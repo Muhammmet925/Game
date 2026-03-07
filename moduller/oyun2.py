@@ -70,7 +70,7 @@ KARAKTERLER = {
         "aciklama": "Otomatik iyileşme - Her vuruşta can",
         "fiyat": 1500,
         "baslangic_hp": 85,
-        "ozellik": "iyilestirme": 0.02
+        "ozellik": {"iyilestirme": 0.02}
     },
     "6": {
         "ad": "Elf", 
@@ -84,7 +84,7 @@ KARAKTERLER = {
         "aciklama": "Çift ok atar - Düşmanları yavaşlatır",
         "fiyat": 2000,
         "baslangic_hp": 75,
-        "ozellik": "yavaslatma": True
+        "ozellik": {"yavaslatma": True}
     },
     "7": {
         "ad": "Paladin", 
@@ -97,7 +97,7 @@ KARAKTERLER = {
         "aciklama": "Yüksek hasar + Zırh - Boss hasarı azaltma",
         "fiyat": 2500,
         "baslangic_hp": 130,
-        "ozellik": "boss_zirh": 0.5
+        "ozellik": {"boss_zirh": 0.5}
     },
     "8": {
         "ad": "Vampir", 
@@ -110,7 +110,7 @@ KARAKTERLER = {
         "aciklama": "Vuruşta can kazanır - Ölümsüzlük şansı",
         "fiyat": 3000,
         "baslangic_hp": 80,
-        "ozellik": "can_emme": 0.15
+        "ozellik": {"can_emme": 0.15}
     },
     "9": {
         "ad": "Ninja", 
@@ -123,7 +123,7 @@ KARAKTERLER = {
         "aciklama": "Hızlı - Bıçak fırlatma",
         "fiyat": 3500,
         "baslangic_hp": 72,
-        "ozellik": "suresiz_silah": True
+        "ozellik": {"suresiz_silah": True}
     },
     "10": {
         "ad": "Baba Yaga", 
@@ -136,7 +136,7 @@ KARAKTERLER = {
         "aciklama": "En güçlü - Patlama hasarı",
         "fiyat": 4000,
         "baslangic_hp": 75,
-        "ozellik": "patlama": True
+        "ozellik": {"patlama": True}
     },
 }
 
